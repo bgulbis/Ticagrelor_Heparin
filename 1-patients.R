@@ -38,4 +38,6 @@ data.overlap <- left_join(tmp.ticag, tmp.heparin, by = "pie.id") %>%
     group_by(pie.id) %>%
     summarize(concur = sum(concur))
 
-readr::write_csv(data.overlap, "data-tidy/overlap.csv")
+data.patients <- filter(data.overlap, concur > 0)
+
+# readr::write_csv(data.overlap, "data-tidy/overlap.csv")
