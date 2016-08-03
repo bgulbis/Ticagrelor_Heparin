@@ -54,13 +54,18 @@ data.overlap <- left_join(tmp.ticag, tmp.heparin, by = "pie.id") %>%
     summarize(tic_hep = sum(tic_hep),
               tic_war = sum(tic_war))
 
-data.patients <- filter(data.overlap, tic_hep > 0)
-
-smry <- data.overlap %>%
+data.summary <- data.overlap %>%
     summarize(num_patients = n(),
               num_any_overlap = sum(tic_hep > 0),
               num_3days_overlap = sum(tic_hep >= 6),
               num_warf_overlap = sum(tic_war > 0),
               num_warf_3days = sum(tic_war > 6))
 
-# readr::write_csv(data.overlap, "data-tidy/overlap.csv")
+data.patients <- filter(data.overlap, tic_hep >= 6)
+
+concat_encounters(data.patients$pie.id)
+
+fins <- read_data(data.raw, "fins") %>%
+    as.id()
+
+readr::write_csv(fins, "data-tidy/fins_ticagrelor.csv")
